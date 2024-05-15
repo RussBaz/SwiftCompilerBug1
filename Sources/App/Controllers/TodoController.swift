@@ -5,13 +5,13 @@ struct TodoController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let todos = routes.grouped("todos")
 
-        todos.get(use: { try await self.index(req: $0) })
-        todos.post(use: { try await self.create(req: $0) })
+        todos.get(use: { try await index(req: $0) })
+        todos.post(use: { try await create(req: $0) })
         todos.group(":todoID") { todo in
-            todo.delete(use: { try await self.delete(req: $0) })
+            todo.delete(use: { try await delete(req: $0) })
         }
     }
-        
+
     func index(req: Request) async throws -> [TodoDTO] {
         try await Todo.query(on: req.db).all().map { $0.toDTO() }
     }
